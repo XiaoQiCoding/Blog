@@ -31,7 +31,7 @@ public class MyObject : MonoBehaviour{
 OnMouseDown原理为射线射到屏幕上，检测到第一个触碰的物品。如果物品的Layer层为Ignore Raycast，则不调用该函数。
 （所以也需要注意，若存在UI元素在绑定该脚本的物品上方，则易使得该GUI事件失效。）
 
-![在Unity中选择Layer类型](https://github.com/IMUHERO/Blog/blob/main/Image/01_1.jpg)
+![在Unity中选择Layer类型](https://raw.githubusercontent.com/IMUHERO/Blog/main/Image/01_1.jpg)
 
 # 条件4：Trigger -> Physics.queriesHitTriggers
 如果碰撞体设置为Trigger属性（勾选isTrigger），则需要确保Queries Hit Triggers已被勾选。该参数表示：指定默认情况下查询（射线投射、球形投射、重叠测试等）是否命中触发器。
@@ -39,7 +39,7 @@ OnMouseDown原理为射线射到屏幕上，检测到第一个触碰的物品。
 通过Edit——Project Settings——Physics（Physics 2D）修改对应的参数。
 
 
-![在Unity修改参数](https://github.com/IMUHERO/Blog/blob/main/Image/01_2.jpg)
+![在Unity修改参数](https://raw.githubusercontent.com/IMUHERO/Blog/main/Image/01_2.jpg)
 
 # 其他：鼠标事件被其他Collider遮挡问题处理
 当一个Collider被别的Collider挡住，被挡的Collider因为射线投射不到，无法触发鼠标响应方法。
