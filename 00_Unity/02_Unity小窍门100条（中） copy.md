@@ -1,0 +1,293 @@
+# 前言
+嗨咯，大家好我是小棋，最近我在整理一些Unity开发的小窍门，发现了Brackeys的宝藏视频：http://bit.ly/1kMekJV。
+
+但是这些小窍门只有视频版本，不利于查阅, 而且需要翻墙才能查看。
+
+因此今天我整理下文字版，里面还有一些我自己的经验和观点，算是一次学习笔记，也希望能够帮到大家。
+
+
+关注我，一起进步吧~
+- [bilibili 打工人小棋](https://space.bilibili.com/302482063?spm_id_from=333.1007.0.0)
+
+- [知乎 打工人小棋](https://www.zhihu.com/people/jin-tian-ye-yao-kai-xin-ya-58-32)
+
+- [CSDN 打工人小棋](https://blog.csdn.net/dagongrenxiaoqi?spm=1000.2115.3001.5343)
+
+# 34. 改变编辑器颜色
+​
+![[图片]](https://raw.githubusercontent.com/IMUHERO/Blog/main/00_Unity/Image/02/34.png)
+
+# 35. 改变运行时编辑器的颜色
+
+
+![[图片]](https://raw.githubusercontent.com/IMUHERO/Blog/main/00_Unity/Image/02/35.png)
+
+# 36. 显示或隐藏场景中的特效
+太多特效容易影响debug，可以在这里关闭
+
+
+![[图片]](https://raw.githubusercontent.com/IMUHERO/Blog/main/00_Unity/Image/02/36.png)
+
+
+# 37. 自定义菜单栏
+
+菜单栏会多一个选项
+
+![[图片]](https://raw.githubusercontent.com/IMUHERO/Blog/main/00_Unity/Image/02/37.png)
+
+
+# 38. 添加内容菜单项
+
+![[图片]](https://raw.githubusercontent.com/IMUHERO/Blog/main/00_Unity/Image/02/38.png)
+
+![[图片]](https://raw.githubusercontent.com/IMUHERO/Blog/main/00_Unity/Image/02/38_2.png)
+点击后会执行打印：
+
+
+![[图片]](https://raw.githubusercontent.com/IMUHERO/Blog/main/00_Unity/Image/02/38_3.png)
+
+
+# 39. 隐藏层级
+点击右上方的Layers，可以看到各个层级，点击眼睛打开或者关闭可以显示或者隐藏对应层级的物体。
+
+
+![[图片]](https://raw.githubusercontent.com/IMUHERO/Blog/main/00_Unity/Image/02/39.png)
+
+
+# 40. 锁定层级
+如上图39，点击眼睛旁边的锁，可以锁定这个层级。
+
+锁定后的层级物体将无法移动或者拖拽，可以用于防止误触。
+
+![[图片]](https://raw.githubusercontent.com/IMUHERO/Blog/main/00_Unity/Image/02/40.png)
+
+# 41. 子层级
+在Layers里添加层级可以用这种方式添加子层级：
+```
+Effects/Lights
+```
+
+![[图片]](https://raw.githubusercontent.com/IMUHERO/Blog/main/00_Unity/Image/02/41.png)
+
+![[图片]](https://raw.githubusercontent.com/IMUHERO/Blog/main/00_Unity/Image/02/41_2.png)
+
+
+# 42. C#全局宏定义
+
+![[图片]](https://raw.githubusercontent.com/IMUHERO/Blog/main/00_Unity/Image/02/42.png)
+
+可以用它来来控制在编译时包含或者忽略某段代码
+
+![[图片]](https://raw.githubusercontent.com/IMUHERO/Blog/main/00_Unity/Image/02/42_2.png)
+
+
+
+
+# 43. 取色器妙用
+取色器不仅可以提取unity中的颜色，还可以提取外部颜色。
+
+![[图片]](https://raw.githubusercontent.com/IMUHERO/Blog/main/00_Unity/Image/02/43.png)
+
+
+
+# 44. 颜色复制/粘贴
+颜色也可以复制和粘贴
+
+![[图片]](https://raw.githubusercontent.com/IMUHERO/Blog/main/00_Unity/Image/02/44.png)
+
+
+
+# 45. 最大化窗口的快捷键
+```
+Shift + space
+```
+
+
+# 46. 编辑类和结构体
+这里的类和结构体不用继承自MonoBehaviour
+
+添加[System.Serializable]后就可以在Inspector视图中编辑这些属性
+
+![[图片]](https://raw.githubusercontent.com/IMUHERO/Blog/main/00_Unity/Image/02/46.png)
+
+![[图片]](https://raw.githubusercontent.com/IMUHERO/Blog/main/00_Unity/Image/02/46_2.png)
+
+
+# 47. 碰撞矩阵
+通过设置下方的碰撞矩阵，可以控制物体之间的碰撞关系。
+
+（举个例子：玩家发射的子弹不希望误伤自己，可以取消子弹和玩家的碰撞）
+![[图片]](https://raw.githubusercontent.com/IMUHERO/Blog/main/00_Unity/Image/02/47.png)
+
+
+# 48. 交互关系图
+这张图展示的是在同一个层次下不同类型的碰撞体之间的交互效果
+
+![[图片]](https://raw.githubusercontent.com/IMUHERO/Blog/main/00_Unity/Image/02/48.png)
+
+
+
+# 49. 在Inspector中做数学运算
+
+![[图片]](https://raw.githubusercontent.com/IMUHERO/Blog/main/00_Unity/Image/02/49.png)
+
+
+# 50. 锁定Inspector
+点击物体的时候会展示当前的物体对应的Inspector，点击Lock就不会关闭当前打开的Inspector视图了。
+
+![[图片]](https://raw.githubusercontent.com/IMUHERO/Blog/main/00_Unity/Image/02/50.png)
+
+这个功能的一个妙用在于，你可以打开另一个物体的Inspector，对照和搬运一些参数。
+
+
+![[图片]](https://raw.githubusercontent.com/IMUHERO/Blog/main/00_Unity/Image/02/50_2.png)
+
+
+# 51. Inspector的debug模式
+打开debug模式后，我们可以在Inspector中看到脚本的私有属性：
+
+![[图片]](https://raw.githubusercontent.com/IMUHERO/Blog/main/00_Unity/Image/02/51.png)
+
+
+
+
+# 52. 反向查找输出log的物体
+在Debug.Log的第二个参数添加gameObject
+
+![[图片]](https://raw.githubusercontent.com/IMUHERO/Blog/main/00_Unity/Image/02/52.png)
+
+这时点击这条log会快速定位到输出这条日志的物体：
+（物体非常多的时候定位问题很方便）
+
+![[图片]](https://raw.githubusercontent.com/IMUHERO/Blog/main/00_Unity/Image/02/52_2.png)
+
+
+
+
+# 53. 在日志中使用简单富文本
+![[图片]](https://raw.githubusercontent.com/IMUHERO/Blog/main/00_Unity/Image/02/53.png)
+
+结果：
+
+![[图片]](https://raw.githubusercontent.com/IMUHERO/Blog/main/00_Unity/Image/02/53_2.png)
+
+
+
+
+# 54. 可视化log输出参数
+对于Update中的一些参数，我们可以用Curve来查看他的可视化变化趋势，而不是一直刷新的Log。
+
+![[图片]](https://raw.githubusercontent.com/IMUHERO/Blog/main/00_Unity/Image/02/54.png)
+
+
+如图所示：
+
+![[图片]](https://raw.githubusercontent.com/IMUHERO/Blog/main/00_Unity/Image/02/54_2.png)
+
+
+
+
+# 55. 快速添加组件
+Inspector中Add Component可以快捷添加脚本。
+
+
+![[图片]](https://raw.githubusercontent.com/IMUHERO/Blog/main/00_Unity/Image/02/55.png)
+
+
+# 56. Unity可以导入多种格式的文件
+包括ps、blender、玛雅等......
+
+
+
+# 57. 保存ps图层
+想要保留ps中的图层信息，可以将ps文件保存为.psb文件
+
+![[图片]](https://raw.githubusercontent.com/IMUHERO/Blog/main/00_Unity/Image/02/57.png)
+
+这种类型的文件可以用于unity中设计图层动画，类似于spine。
+
+我之前做过一期滑雪游戏就是用的这个功能（第一次做的视频，有点low）：
+
+冬奥会没看够，自制一款冰冰滑雪小游戏，进来试玩。_单机游戏热门视频
+
+记得提前安装 2D PSDImporter：（现在新版本似乎不用了，我没印象自己装了这个，或者是默认安装？）
+
+![[图片]](https://raw.githubusercontent.com/IMUHERO/Blog/main/00_Unity/Image/02/57_2.png)
+
+# 58. Gizmos
+Gizmos可以给对象设置标记图标
+
+![[图片]](https://raw.githubusercontent.com/IMUHERO/Blog/main/00_Unity/Image/02/58.png)
+
+
+
+# 59. Gizmos自定义图标
+
+
+![[图片]](https://raw.githubusercontent.com/IMUHERO/Blog/main/00_Unity/Image/02/59.png)
+
+# 60. 场景中展示、隐藏图标
+在场景视图下可以选择显示或者隐藏指定类型的图标
+
+
+![[图片]](https://raw.githubusercontent.com/IMUHERO/Blog/main/00_Unity/Image/02/60.png)
+
+
+# 61. 游戏视图中展示、隐藏图标
+同理，在Game视图中也可以设置
+
+
+
+# 62. 用StringBuilder拼接字符串
+No:
+
+![[图片]](https://raw.githubusercontent.com/IMUHERO/Blog/main/00_Unity/Image/02/62.png)
+
+
+Yes:
+
+![[图片]](https://raw.githubusercontent.com/IMUHERO/Blog/main/00_Unity/Image/02/62_2.png)
+
+# 63. ScriptableObjects
+利用ScriptableObjects可以创建Editor对象，
+
+可以用来保存游戏内的物品和成就等信息。
+
+![[图片]](https://raw.githubusercontent.com/IMUHERO/Blog/main/00_Unity/Image/02/63.png)
+
+
+
+
+
+# 64. 运行时脚本改变
+可以在Preferences窗口中修改运行中脚本改变unity执行的行为
+
+
+![[图片]](https://raw.githubusercontent.com/IMUHERO/Blog/main/00_Unity/Image/02/64.png)
+
+
+# 65. 拓展编辑器窗口
+
+
+
+![[图片]](https://raw.githubusercontent.com/IMUHERO/Blog/main/00_Unity/Image/02/65.png)
+
+
+# 66. 自定义Inspector窗口
+
+
+![[图片]](https://raw.githubusercontent.com/IMUHERO/Blog/main/00_Unity/Image/02/66.png)
+
+结果：
+
+
+![[图片]](https://raw.githubusercontent.com/IMUHERO/Blog/main/00_Unity/Image/02/66_2.png)
+
+
+---
+
+> 第二部分完成时间：2022-10-21 11:09 \
+> 喜欢的朋友请不要收藏吃灰，记得点个赞再走呀~ \
+> 接着是第三部分 ：
+
+---
