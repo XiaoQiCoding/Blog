@@ -108,3 +108,11 @@ public class PlayerMove : MonoBehaviour
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200629000122793.gif)
 2. 右移 + 前进
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200629000144489.gif)
+
+关注我，一起进步吧~
+- [bilibili 打工人小棋](https://space.bilibili.com/302482063?spm_id_from=333.1007.0.0)
+
+- [知乎 打工人小棋](https://www.zhihu.com/people/jin-tian-ye-yao-kai-xin-ya-58-32)
+
+- [CSDN 打工人小棋](https://blog.csdn.net/dagongrenxiaoqi?spm=1000.2115.3001.5343)
+

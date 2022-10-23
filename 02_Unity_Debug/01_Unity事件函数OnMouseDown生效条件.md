@@ -48,6 +48,14 @@ OnMouseDown原理为射线射到屏幕上，检测到第一个触碰的物品。
 
 因此将不需要触发OnMouseEnter的Collider游戏对象的Layer设置为 Ignore Raycast layer即可解决。
 
+---
+关注我，一起进步吧~
+- [bilibili 打工人小棋](https://space.bilibili.com/302482063?spm_id_from=333.1007.0.0)
+
+- [知乎 打工人小棋](https://www.zhihu.com/people/jin-tian-ye-yao-kai-xin-ya-58-32)
+
+- [CSDN 打工人小棋](https://blog.csdn.net/dagongrenxiaoqi?spm=1000.2115.3001.5343)
+
 # 参考文档：
 - [Unity事件函数OnMouseDown生效条件](https://juejin.cn/post/7105744886464249870)
 - [Unity 被遮挡Collider如何触发OnMouseEnter事件](https://blog.csdn.net/sinat_24229853/article/details/42835313)
