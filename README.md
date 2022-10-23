@@ -8,4 +8,4 @@
 
 - 知乎：[https://www.zhihu.com/people/jin-tian-ye-yao-kai-xin-ya-58-32](https://www.zhihu.com/people/jin-tian-ye-yao-kai-xin-ya-58-32)
 
-- [CSDN 打工人小棋](https://blog.csdn.net/dagongrenxiaoqi?spm=1000.2115.3001.5343)
+- CSDN：[https://blog.csdn.net/dagongrenxiaoqi?spm=1000.2115.3001.5343](https://blog.csdn.net/dagongrenxiaoqi?spm=1000.2115.3001.5343)
