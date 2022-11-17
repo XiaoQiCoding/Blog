@@ -1,8 +1,7 @@
 # 音频概述
 如果游戏缺少某种音频，无论是背景音乐还是其他音效，那么游戏是不完整的。Unity 的音频系统既灵活而又强大。它可以导入大多数标准音频文件格式，精通于在3D 空间中播放声音，还可根据需要提供其他效果（比如回声和滤波）。Unity 还可以通过用户机器上任何可用麦克风来录制音频，以便在游戏过程中进行使用或存储和传输。
 
-
-![音频源和倾听者](https://raw.githubusercontent.com/XiaoQiCoding/Blog/main/01_Unity_Base/Image/AudioSourceListDiagram.jpg)
+![音频源和倾听者](https://raw.githubusercontent.com/XiaoQiCoding/Blog/main/01_Unity_Base/Image/AudioSourceListDiagram.png)
 
 
 
@@ -12,11 +11,11 @@
 ## 音频剪辑（Audio Clip）
 **音频剪辑**包含音频源使用的音频数据
 
-![音频剪辑检视面板 (Inspector)](https://raw.githubusercontent.com/XiaoQiCoding/Blog/main/01_Unity_Base/Image/AudioClipImporter50.jpg)
+![音频剪辑检视面板 (Inspector)](https://raw.githubusercontent.com/XiaoQiCoding/Blog/main/01_Unity_Base/Image/AudioClipImporter50.png)
 
 ## 音频监听器（Audio Listener）
 
-![音频剪辑检视面板 (Inspector)](https://raw.githubusercontent.com/XiaoQiCoding/Blog/main/01_Unity_Base/Image/audio_listener_inspector.jpg)
+![音频剪辑检视面板 (Inspector)](https://raw.githubusercontent.com/XiaoQiCoding/Blog/main/01_Unity_Base/Image/audio_listener_inspector.png)
 
 
 **音频监听器** (Audio Listener) 充当类似于麦克风的设备。
@@ -32,7 +31,7 @@
 
 # 音频源
 **音频源** (Audio Source) 在场景中播放音频剪辑。
-![音频源](https://raw.githubusercontent.com/XiaoQiCoding/Blog/main/01_Unity_Base/Image/AudioSourceInspector.jpg)
+![音频源](https://raw.githubusercontent.com/XiaoQiCoding/Blog/main/01_Unity_Base/Image/AudioSourceInspector.png)
 
 属性介绍参考：[https://docs.unity3d.com/cn/2021.1/Manual/class-AudioSource.html](https://docs.unity3d.com/cn/2021.1/Manual/class-AudioSource.html)
 
@@ -43,4 +42,4 @@
 
 没有组件用于麦克风 (Microphone) 类，可通过脚本直接访问。有关更多信息，请参阅脚本参考中的 Microphone 页面。
 
-![麦克风](https://raw.githubusercontent.com/XiaoQiCoding/Blog/main/01_Unity_Base/Image/Microphone-icon.jpg)
+![麦克风](https://raw.githubusercontent.com/XiaoQiCoding/Blog/main/01_Unity_Base/Image/Microphone-icon.png)
