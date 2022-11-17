@@ -1,12 +1,5 @@
 嗨咯，大家好我是小棋，上次教大家如何在本地用Git管理自己的项目，这次我们一起来了解下Git远程仓库：github。
 
-关注我，一起进步吧~
-- [bilibili 打工人小棋](https://space.bilibili.com/302482063?spm_id_from=333.1007.0.0)
-
-- [知乎 打工人小棋](https://www.zhihu.com/people/jin-tian-ye-yao-kai-xin-ya-58-32)
-
-- [CSDN 打工人小棋](https://blog.csdn.net/dagongrenxiaoqi?spm=1000.2115.3001.5343)
-
 # 前言
 使用Git管理项目让我们事半功倍，但是把项目存放在本地是危险的，而且不利于多人协作，因此我们需要将项目push到远程仓库（可以类比百度云盘），用它来帮助我们托管项目。
 
@@ -90,3 +83,17 @@ git push -u origin main
 一般不会用吧，不用管这一点了。
 
 > 值得一说的是：当你在github中浏览别人的项目时，可以使用他项目右上角的fork按钮，把他的项目克隆一份到你自己的仓库中。因为你无法对他的项目做修改，但是拷贝完后，你就可以修改自己fork后的远程项目了~
+
+---
+
+关注我，一起进步吧~
+
+- [bilibili 打工人小棋](https://space.bilibili.com/302482063?spm_id_from=333.1007.0.0)
+
+- [知乎 打工人小棋](https://www.zhihu.com/people/jin-tian-ye-yao-kai-xin-ya-58-32)
+
+- [CSDN 打工人小棋](https://blog.csdn.net/dagongrenxiaoqi?spm=1000.2115.3001.5343)
+
+![点个赞叭~](https://raw.githubusercontent.com/XiaoQiCoding/Blog/main/Image/Zan2.jpg)
+
+

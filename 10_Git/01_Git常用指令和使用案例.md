@@ -212,3 +212,17 @@ git tag
 git show
  > 查看标签详情
  - `git show <tagname>`
+
+---
+
+关注我，一起进步吧~
+
+- [bilibili 打工人小棋](https://space.bilibili.com/302482063?spm_id_from=333.1007.0.0)
+
+- [知乎 打工人小棋](https://www.zhihu.com/people/jin-tian-ye-yao-kai-xin-ya-58-32)
+
+- [CSDN 打工人小棋](https://blog.csdn.net/dagongrenxiaoqi?spm=1000.2115.3001.5343)
+
+![点个赞叭~](https://raw.githubusercontent.com/XiaoQiCoding/Blog/main/Image/Zan3.jpg)
+
+
