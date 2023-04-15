@@ -1,3 +1,13 @@
+- [框架设计](#框架设计)
+- [工具选用](#工具选用)
+- [逻辑书写](#逻辑书写)
+- [框架使用](#框架使用)
+- [框架优化](#框架优化)
+- [数据加密](#数据加密)
+- [总结](#总结)
+- [最后](#最后)
+
+
 Hi 大家好，我是游戏区Bug打工人小棋。
 
 在游戏开发过程中，我们经常有存储用户数据的这一需求，比方说：游戏音量、关卡进度、任务进度等等。
@@ -127,3 +137,381 @@ public class LocalConfig
     }
 }
 ```
+
+# 框架使用
+下面我们来验证下这套框架的使用效果，这里我书写了两个GM指令。
+
+此处使用到了`MenuItem`这个特性，帮助我们在编辑器窗口生成快捷按钮。
+
+[![p9poL5V.png](https://s1.ax1x.com/2023/04/15/p9poL5V.png)](https://imgse.com/i/p9poL5V)
+
+- `SaveLocalConfig`: 保存名称为`xiaoqi0-4`的用户数据
+- `GetLocalConfig`: 读取名称为`xiaoqi0-4`的用户数据，并打印数据
+
+
+
+```cs
+using UnityEditor;
+using UnityEngine;
+
+class GMCmd
+{
+    [MenuItem("GMCmd/SaveLocalConf")]
+    public static void SaveLocalConfig()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            UserData userData = new UserData();
+            userData.name = "xiaoqi" + i.ToString();
+            userData.level = i;
+            LocalConfig.SaveUserData(userData);
+        }
+        Debug.Log("Save End!!!!!!!!!!!!");
+    }
+
+    [MenuItem("GMCmd/GetLocalConfig")]
+    public static void GetLocalConfig()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            string name = "xiaoqi" + i.ToString();
+            UserData userData = LocalConfig.LoadUserData(name);
+            Debug.Log(userData.name);
+            Debug.Log(userData.test);
+        }
+    }
+
+}
+```
+
+1. 点击保存数据：`SaveLocalConf`
+
+[![p9poL5V.png](https://s1.ax1x.com/2023/04/15/p9poL5V.png)](https://imgse.com/i/p9poL5V)
+
+根据[官方文档](https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html)的说明，我们知道在 **windows** 上`Application.persistentDataPath`对应：
+
+`Windows Store Apps: Application.persistentDataPath points to C:\Users\<user>\AppData\LocalLow\<company name>.`
+
+而这个`<company name>`在 projecting setting 中可以找到：
+[![p9pT3Pf.png](https://s1.ax1x.com/2023/04/15/p9pT3Pf.png)](https://imgse.com/i/p9pT3Pf)
+
+因此我最终找到我保存的Json文件在这里：[![p9pTJxg.png](https://s1.ax1x.com/2023/04/15/p9pTJxg.png)](https://imgse.com/i/p9pTJxg)
+
+文本内容也与我们预期的一致：
+```json
+{"name":"xiaoqi0","level":0,"test":{}}
+```
+
+2. 点击读取数据：`GetLocalConfig`
+
+[![p9poL5V.png](https://s1.ax1x.com/2023/04/15/p9poL5V.png)](https://imgse.com/i/p9poL5V)
+
+最终结果如下：
+
+[![p9pTWZR.png](https://s1.ax1x.com/2023/04/15/p9pTWZR.png)](https://imgse.com/i/p9pTWZR)
+
+和预期效果一致~
+
+至此存取框架的主体部分已经完成，下面我们对这套框架进行优化。
+
+
+# 框架优化
+
+由于IO操作涉及到硬盘读写，性能较慢，我们可以对已经读取过的数据进行缓存。
+
+```c#
+// 修改0：新增引用命名空间
+using System.Collections.Generic;
+
+public class LocalConfig
+{
+    // 修改1：增加usersData放在内存中
+    public static Dictionary<string, UserData> usersData = new Dictionary<string, UserData>();
+
+    public static UserData LoadUserData(string userName)
+    {
+        // 修改2：读取时，如果userData已经存在，就直接使用
+        if (usersData.ContainsKey(userName))
+        {
+            return usersData[userName];
+        }
+
+        string path = Application.persistentDataPath + string.Format("/users/{0}.json", userName);
+        if (File.Exists(path))
+        {
+            string jsonData = File.ReadAllText(path);
+            UserData userData = JsonConvert.DeserializeObject<UserData>(jsonData);
+            usersData[userName] = userData;
+            return userData;
+        }
+        else
+        {
+            return null;
+        }
+    }
+}
+```
+
+# 数据加密
+
+一些聪明的玩家，可以根据我们保存的json字段猜测其语义，比如直接修改`level=100`，这样无异于开挂，因此对于上线的游戏，我们还需要对数据进行加密处理。
+
+这里我演示下最简单的一种亦或加密法。
+
+首先介绍下亦或操作，简单理解就是：
+- 当两次输入不同时得到结果为1，即正确
+- 当两次输入相同时得到结果为0，即错误
+
+|输入|运算符|输入|结果|
+|--|--|--|--|
+|1|^|1|0|
+|1|^|0|1|
+|0|^|1|1|
+|0|^|0|0|
+
+这个运算符有个特性，就是对任意输入进行两次相同的亦或，会复原结果。
+
+比如：
+> 假设一个数为 0
+- 第一步：0^1 = 1
+- 第二步：1^1 = 0 （复原结果）
+
+> 建设一个数为 1
+- 第一步：1^1 = 0
+- 第二步：0^1 = 1 （复原结果）
+
+利用这个性质，我们可以将保存的文本文件进行首次亦或，得到乱码数据，这样玩家看到的就是乱码。
+
+然后当我们读取数据的时候再次进行一次亦或，即可复原数据，这样我们看到的就是正确数据。
+
+废话不多说，上代码：
+
+```c#
+public class LocalConfig
+{
+    // 随便选取一些用于亦或的字符（看自己喜欢：注意保密）
+    public static char[] keyChars = { 'a', 'b', 'c', 'd', 'e' };
+    // 加密
+    public static string Encrypt(string data)
+    {
+        char[] dataChars = data.ToCharArray();
+        for (int i = 0; i < dataChars.Length; i++)
+        {
+            char dataChar = dataChars[i];
+            char keyChar = keyChars[i % keyChars.Length];
+            // 重点：通过亦或得到新的字符
+            char newChar = (char)(dataChar ^ keyChar);
+            dataChars[i] = newChar;
+        }
+        return new string(dataChars);
+    }
+
+    // 解密
+    public static string Decrypt(string data)
+    {
+        // 两次亦或执行的是同样的操作
+        return Encrypt(data);
+    }
+
+    // 修改：存数据的时候进行第一次亦或
+    public static void SaveUserData(UserData userData)
+    {
+        // ...
+        string jsonData = JsonConvert.SerializeObject(userData);
+        jsonData = Encrypt(jsonData);
+        // ...
+    }
+
+    // 修改：存数据的时候进行第二次亦或（复原数据）
+    public static UserData LoadUserData(string userName)
+    {
+       
+        // ...
+        if (File.Exists(path))
+        {
+            string jsonData = File.ReadAllText(path);
+            jsonData = Decrypt(jsonData);
+            // ...
+        }
+        // ...
+    }
+}
+```
+
+
+测试结果如下：
+
+1. 保存数据到本地
+
+> 可以看到保存后的数据是乱码，玩家再也没办法开挂了!!!
+
+
+[![p9pHDvF.png](https://s1.ax1x.com/2023/04/15/p9pHDvF.png)](https://imgse.com/i/p9pHDvF)
+
+2. 读取数据到内存
+
+> 可以看到最后读取的数据复原成功了
+
+
+[![p9pTWZR.png](https://s1.ax1x.com/2023/04/15/p9pTWZR.png)](https://imgse.com/i/p9pTWZR)
+
+
+# 总结
+
+本文通过框架设计、工具选用、逻辑书写、框架使用、框架优化、数据加密这六部分内容，层层剖析，向大家介绍了一种简单易用的本地化存取框架，希望能对大家有所帮助。
+
+最后将成果代码贴出来，由于还没有经过项目实践，仅仅是理论分享，如果代码有疏漏欢迎交流指正。
+
+1. 框架部分
+```c#
+using System.IO;
+using Newtonsoft.Json;
+using UnityEngine;
+using System.Collections.Generic;
+// Define a class to handle local data storage
+public class LocalConfig
+{
+    public static char[] keyChars = { 'a', 'b', 'c', 'd', 'e' };
+    public static Dictionary<string, UserData> usersData = new Dictionary<string, UserData>();
+    // Define a method to save user data locally
+    public static void SaveUserData(UserData userData)
+    {
+        if (!File.Exists(Application.persistentDataPath + "/users"))
+        {
+            System.IO.Directory.CreateDirectory(Application.persistentDataPath + "/users");
+        }
+        // Convert the user data to a JSON string
+        string jsonData = JsonConvert.SerializeObject(userData);
+#if !UNITY_EDITOR
+        jsonData = Encrypt(jsonData);
+#endif
+        // Save the JSON string to a file
+        File.WriteAllText(Application.persistentDataPath + string.Format("/users/{0}.json", userData.name), jsonData);
+    }
+
+    // Define a method to load user data from local storage
+    public static UserData LoadUserData(string userName)
+    {
+        if (usersData.ContainsKey(userName))
+        {
+            return usersData[userName];
+        }
+
+        // Check if the user data file exists
+        string path = Application.persistentDataPath + string.Format("/users/{0}.json", userName);
+        if (File.Exists(path))
+        {
+            // Load the JSON string from the file
+            string jsonData = File.ReadAllText(path);
+#if UNITY_EDITOR
+            jsonData = Decrypt(jsonData);
+#endif
+            // Convert the JSON string to user data object
+            UserData userData = JsonConvert.DeserializeObject<UserData>(jsonData);
+            usersData[userName] = userData;
+            return userData;
+        }
+        else
+        {
+            // If the user data file does not exist, return null
+            return null;
+        }
+    }
+
+    public static string Encrypt(string data)
+    {
+        char[] dataChars = data.ToCharArray();
+        for (int i = 0; i < dataChars.Length; i++)
+        {
+            char dataChar = dataChars[i];
+            char keyChar = keyChars[i % keyChars.Length];
+            char newChar = (char)(dataChar ^ keyChar);
+            dataChars[i] = newChar;
+        }
+        return new string(dataChars);
+    }
+
+    public static string Decrypt(string data)
+    {
+        return Encrypt(data);
+    }
+}
+
+// Define a class to represent user data
+public class UserData
+{
+    public string name;
+    public int level;
+}
+
+```
+
+2. 使用案例
+
+```c#
+using UnityEditor;
+using UnityEngine;
+
+class GMCmd
+{
+    [MenuItem("GMCmd/SaveLocalConf")]
+    public static void SaveLocalConfig()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            UserData userData = new UserData();
+            userData.name = "xiaoqi" + i.ToString();
+            userData.level = i;
+            LocalConfig.SaveUserData(userData);
+        }
+        Debug.Log("Save End!!!!!!!!!!!!");
+    }
+
+    [MenuItem("GMCmd/GetLocalConfig")]
+    public static void GetLocalConfig()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            string name = "xiaoqi" + i.ToString();
+            UserData userData = LocalConfig.LoadUserData(name);
+            Debug.Log(userData.name);
+            Debug.Log(userData.level);
+        }
+    }
+
+}
+```
+
+3. 最终路径
+> 参考官方文档
+
+[https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html](https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html)
+
+4. tips
+
+在编辑器模式下，我们不需要对数据进行加密解密，这会影响到我们的开发效率，可以使用`UNITY_EDITOR`这个宏进行判断，具体逻辑参考上文代码。
+
+```c#
+#if UNITY_EDITOR
+            jsonData = Decrypt(jsonData);
+#endif
+```
+
+
+# 最后
+
+本文洋洋洒洒写了一万两千多字，绝对是干货中的干货，希望对大家有所帮助，请大家多多点赞收藏评论，你的支持是小棋最大的动力。
+
+也欢迎同学们持续关注：
+
+- [bilibili 打工人小棋](https://space.bilibili.com/302482063?spm_id_from=333.1007.0.0)
+
+- [知乎 打工人小棋](https://www.zhihu.com/people/jin-tian-ye-yao-kai-xin-ya-58-32)
+
+- [CSDN 打工人小棋](https://blog.csdn.net/dagongrenxiaoqi?spm=1000.2115.3001.5343)
+
+
+[![p9pbbyF.jpg](https://s1.ax1x.com/2023/04/15/p9pbbyF.jpg)](https://imgse.com/i/p9pbbyF)
+
+
+加油 ：）
