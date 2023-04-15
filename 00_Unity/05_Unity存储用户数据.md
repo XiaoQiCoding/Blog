@@ -1,3 +1,4 @@
+目录
 - [框架设计](#框架设计)
 - [工具选用](#工具选用)
 - [逻辑书写](#逻辑书写)
@@ -10,6 +11,8 @@
 
 Hi 大家好，我是游戏区Bug打工人小棋。
 
+<img src="https://s1.ax1x.com/2023/04/15/p9SLIl8.jpg" width="50%">
+
 在游戏开发过程中，我们经常有存储用户数据的这一需求，比方说：游戏音量、关卡进度、任务进度等等。
 [![p9SO736.png](https://s1.ax1x.com/2023/04/15/p9SO736.png)](https://imgse.com/i/p9SO736)
 
@@ -19,7 +22,7 @@ Hi 大家好，我是游戏区Bug打工人小棋。
 
 # 框架设计
 我们首先定义一个用户数据类：`UserData`，他包含用户基础信息：`姓名`和`等级`。
-```c#
+```cs
 public class UserData
 {
     public string name;
@@ -38,7 +41,7 @@ public class UserData
 1. SaveUserData
 2. LoadUserData
 
-```c#
+```cs
 public class LocalConfig
 {
     public static void SaveUserData(UserData userData)
@@ -91,7 +94,7 @@ Unity中为我们提供了许多特殊文件路径，经过我与`ChatGPT`一分
 
 # 逻辑书写
 最后让我们来书写存取框架的具体逻辑叭~
-```c#
+```cs
 // 用于文件读写
 using System.IO;
 // 用于json序列化和反序列化
@@ -219,7 +222,7 @@ class GMCmd
 
 由于IO操作涉及到硬盘读写，性能较慢，我们可以对已经读取过的数据进行缓存。
 
-```c#
+```cs
 // 修改0：新增引用命名空间
 using System.Collections.Generic;
 
@@ -286,7 +289,7 @@ public class LocalConfig
 
 废话不多说，上代码：
 
-```c#
+```cs
 public class LocalConfig
 {
     // 随便选取一些用于亦或的字符（看自己喜欢：注意保密）
@@ -363,7 +366,7 @@ public class LocalConfig
 最后将成果代码贴出来，由于还没有经过项目实践，仅仅是理论分享，如果代码有疏漏欢迎交流指正。
 
 1. 框架部分
-```c#
+```cs
 using System.IO;
 using Newtonsoft.Json;
 using UnityEngine;
@@ -448,7 +451,7 @@ public class UserData
 
 2. 使用案例
 
-```c#
+```cs
 using UnityEditor;
 using UnityEngine;
 
@@ -491,7 +494,7 @@ class GMCmd
 
 在编辑器模式下，我们不需要对数据进行加密解密，这会影响到我们的开发效率，可以使用`UNITY_EDITOR`这个宏进行判断，具体逻辑参考上文代码。
 
-```c#
+```cs
 #if UNITY_EDITOR
             jsonData = Decrypt(jsonData);
 #endif
@@ -511,7 +514,7 @@ class GMCmd
 - [CSDN 打工人小棋](https://blog.csdn.net/dagongrenxiaoqi?spm=1000.2115.3001.5343)
 
 
-[![p9pbbyF.jpg](https://s1.ax1x.com/2023/04/15/p9pbbyF.jpg)](https://imgse.com/i/p9pbbyF)
+<img src="https://s1.ax1x.com/2023/04/15/p9pbbyF.jpg" width="50%">
 
 
 加油 ：）
