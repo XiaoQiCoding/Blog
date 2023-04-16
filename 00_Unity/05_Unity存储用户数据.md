@@ -21,7 +21,10 @@ Hi 大家好，我是游戏区Bug打工人小棋。
 今天小棋给大家分享一套简单易用的本地存储框架，希望对同学们有所帮助。
 
 # 框架设计
-我们首先定义一个用户数据类：`UserData`，他包含用户基础信息：`姓名`和`等级`。
+
+我们首先定义一个管理类：`LocalConfig.cs`，专门用于管理本地化数据。
+
+接着创建玩家数据类：`UserData`，他包含用户基础信息：`姓名`和`等级`。
 ```cs
 public class UserData
 {
@@ -31,7 +34,6 @@ public class UserData
 ```
 
 
-接着创建`LocalConfig.cs`，这是个管理类，专门用于管理本地化数据。
 
 这里主要做两件事：
 1. 将内存中的用户数据进行序列化，以文本格式保存在本地
@@ -231,26 +233,19 @@ public class LocalConfig
     // 修改1：增加usersData放在内存中
     public static Dictionary<string, UserData> usersData = new Dictionary<string, UserData>();
 
+    // 保存用户数据文本
+    public static void SaveUserData(UserData userData)
+    {
+        // ...
+        // 修改2：保存缓存数据
+        usersData[userData.name] = userData;
+        // ...
+    }
+
     public static UserData LoadUserData(string userName)
     {
-        // 修改2：读取时，如果userData已经存在，就直接使用
-        if (usersData.ContainsKey(userName))
-        {
-            return usersData[userName];
-        }
-
-        string path = Application.persistentDataPath + string.Format("/users/{0}.json", userName);
-        if (File.Exists(path))
-        {
-            string jsonData = File.ReadAllText(path);
-            UserData userData = JsonConvert.DeserializeObject<UserData>(jsonData);
-            usersData[userName] = userData;
-            return userData;
-        }
-        else
-        {
-            return null;
-        }
+        // 修改3：读取时，如果userData已经存在，就直接使用
+        // ... 
     }
 }
 ```
@@ -367,80 +362,97 @@ public class LocalConfig
 
 1. 框架部分
 ```cs
+// 用于文件读写
 using System.IO;
+// 用于json序列化和反序列化
 using Newtonsoft.Json;
+// Application.persistentDataPath配置在这里
 using UnityEngine;
+// 修改0：使用字典命名空间
 using System.Collections.Generic;
-// Define a class to handle local data storage
+
 public class LocalConfig
 {
-    public static char[] keyChars = { 'a', 'b', 'c', 'd', 'e' };
+
+    // 修改1：增加usersData缓存数据
     public static Dictionary<string, UserData> usersData = new Dictionary<string, UserData>();
-    // Define a method to save user data locally
-    public static void SaveUserData(UserData userData)
-    {
-        if (!File.Exists(Application.persistentDataPath + "/users"))
-        {
-            System.IO.Directory.CreateDirectory(Application.persistentDataPath + "/users");
-        }
-        // Convert the user data to a JSON string
-        string jsonData = JsonConvert.SerializeObject(userData);
-#if !UNITY_EDITOR
-        jsonData = Encrypt(jsonData);
-#endif
-        // Save the JSON string to a file
-        File.WriteAllText(Application.persistentDataPath + string.Format("/users/{0}.json", userData.name), jsonData);
-    }
+    // 加密1：选择一些用于亦或操作的字符（注意保密）
+    public static char[] keyChars = {'a', 'b', 'c', 'd', 'e'};
 
-    // Define a method to load user data from local storage
-    public static UserData LoadUserData(string userName)
-    {
-        if (usersData.ContainsKey(userName))
-        {
-            return usersData[userName];
-        }
-
-        // Check if the user data file exists
-        string path = Application.persistentDataPath + string.Format("/users/{0}.json", userName);
-        if (File.Exists(path))
-        {
-            // Load the JSON string from the file
-            string jsonData = File.ReadAllText(path);
-#if UNITY_EDITOR
-            jsonData = Decrypt(jsonData);
-#endif
-            // Convert the JSON string to user data object
-            UserData userData = JsonConvert.DeserializeObject<UserData>(jsonData);
-            usersData[userName] = userData;
-            return userData;
-        }
-        else
-        {
-            // If the user data file does not exist, return null
-            return null;
-        }
-    }
-
+    // 加密2： 加密方法
     public static string Encrypt(string data)
     {
-        char[] dataChars = data.ToCharArray();
-        for (int i = 0; i < dataChars.Length; i++)
+        char [] dataChars = data.ToCharArray();
+        for (int i=0; i<dataChars.Length; i++)
         {
             char dataChar = dataChars[i];
             char keyChar = keyChars[i % keyChars.Length];
+            // 重点： 通过亦或得到新的字符
             char newChar = (char)(dataChar ^ keyChar);
             dataChars[i] = newChar;
         }
         return new string(dataChars);
     }
 
+    // 加密3： 解密方法
     public static string Decrypt(string data)
     {
         return Encrypt(data);
     }
+
+    // 保存用户数据文本
+    public static void SaveUserData(UserData userData)
+    {
+        // 在persistentDataPath下创建一个/users文件夹，方便管理
+        if(!File.Exists(Application.persistentDataPath + "/users"))
+        {
+            System.IO.Directory.CreateDirectory(Application.persistentDataPath + "/users");
+        }
+
+        // 修改2：保存缓存数据
+        usersData[userData.name] = userData;
+
+        // 转换用户数据为JSON字符串
+        string jsonData = JsonConvert.SerializeObject(userData);
+#if UNITY_EDITOR
+        // 加密4
+        jsonData = Encrypt(jsonData);
+#endif
+        // 将JSON字符串写入文件中（文件名为userData.name）
+        File.WriteAllText(Application.persistentDataPath + string.Format("/users/{0}.json", userData.name), jsonData);
+    }
+
+    // 读取用户数据到内存
+    public static UserData LoadUserData(string userName)
+    {
+        // 修改3： 率先从缓存中取数据，而不是从文本文件中读取
+        if(usersData.ContainsKey(userName))
+        {
+            return usersData[userName];
+        }
+
+        string path = Application.persistentDataPath + string.Format("/users/{0}.json", userName);
+        // 检查用户配置文件是否存在
+        if(File.Exists(path))
+        {
+            // 从文本文件中加载JSON字符串
+            string jsonData = File.ReadAllText(path);
+#if UNITY_EDITOR
+            // 加密5
+            jsonData = Decrypt(jsonData);
+#endif
+            // 将JSON字符串转换为用户内存数据
+            UserData userData = JsonConvert.DeserializeObject<UserData>(jsonData);
+            return userData;
+        }
+        else
+        {
+            return null;
+        }
+    }
 }
 
-// Define a class to represent user data
+
 public class UserData
 {
     public string name;
@@ -452,26 +464,26 @@ public class UserData
 2. 使用案例
 
 ```cs
-using UnityEditor;
 using UnityEngine;
+using UnityEditor;
 
-class GMCmd
+public class GMCmd
 {
-    [MenuItem("GMCmd/SaveLocalConf")]
+    [MenuItem("CMCmd/SaveLocalConfig")]
     public static void SaveLocalConfig()
     {
-        for (int i = 0; i < 5; i++)
+        for (int i=0; i<5; i++)
         {
             UserData userData = new UserData();
             userData.name = "xiaoqi" + i.ToString();
             userData.level = i;
             LocalConfig.SaveUserData(userData);
         }
-        Debug.Log("Save End!!!!!!!!!!!!");
+        Debug.Log("Save End !!!!!!!!!!!!!!!!!!!!");
     }
 
-    [MenuItem("GMCmd/GetLocalConfig")]
-    public static void GetLocalConfig()
+    [MenuItem("CMCmd/LoadLocalConfig")]
+    public static void LoadLocalConfig()
     {
         for (int i = 0; i < 5; i++)
         {
@@ -514,7 +526,10 @@ class GMCmd
 - [CSDN 打工人小棋](https://blog.csdn.net/dagongrenxiaoqi?spm=1000.2115.3001.5343)
 
 
+
+扫描下方二维码，关注小棋公众号，优质资源和文章这里都有：
+
 <img src="https://s1.ax1x.com/2023/04/15/p9pbbyF.jpg" width="50%">
 
 
-加油 ：）
+一起加油 ：）
