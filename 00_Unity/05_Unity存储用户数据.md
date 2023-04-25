@@ -6,6 +6,7 @@
 - [框架优化](#框架优化)
 - [数据加密](#数据加密)
 - [总结](#总结)
+- [2023/4/16补充](#2023416补充)
 - [最后](#最后)
 
 
@@ -512,6 +513,75 @@ public class GMCmd
 #endif
 ```
 
+# 2023/4/16补充
+> bili 沃忆同学提出，对于Vector3，JsonConvert并不支持序列化，可以使用下面这种方法添加序列化方式
+
+> 最后记得调用下： 
+
+```cs
+
+private void Start()
+        {
+            AddSerializedJson.AddAllConverter();
+        }
+
+```
+
+序列化方式定义
+```cs
+using System;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using UnityEngine;
+
+namespace Lyf.SaveSystem
+{
+    public static class AddSerializedJson
+    {
+        public static void AddAllConverter()
+        {
+            AddVector3Converter();
+        }
+
+        private static void AddVector3Converter()
+        {
+            JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+            {
+                Converters = { new Vector3Converter() }
+            };
+        }
+    }
+    
+    public class Vector3Converter : JsonConverter   // 用于将Vector3序列化转换为Json
+    {
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            var vector = (Vector3)value;
+            var obj = new JObject
+            {
+                { "x", vector.x },
+                { "y", vector.y },
+                { "z", vector.z }
+            };
+            obj.WriteTo(writer);
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            var obj = JObject.Load(reader);
+            var x = (float)obj["x"];
+            var y = (float)obj["y"];
+            var z = (float)obj["z"];
+            return new Vector3(x, y, z);
+        }
+
+        public override bool CanConvert(Type objectType)
+        {
+            return objectType == typeof(UnityEngine.Vector3);
+        }
+    }
+}
+```
 
 # 最后
 
