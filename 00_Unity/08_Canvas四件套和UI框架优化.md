@@ -301,7 +301,7 @@ Canvas Scaler也有三种模式:
 
 用于检测UI元素是否被点击或触摸。当使用鼠标或触摸屏幕时，Graphic Raycaster会向场景中的UI元素发射一条射线，以确定被点击或触摸的元素是哪一个
 
-[![p96IvGQ.png](https://s1.ax1x.com/2023/05/13/p96IvGQ.png)](https://imgse.com/i/p96IvGQ)
+[![p9Wbjw4.png](https://s1.ax1x.com/2023/05/17/p9Wbjw4.png)](https://imgse.com/i/p9Wbjw4)
 
 1. Ignore Reversed Graphics
 
